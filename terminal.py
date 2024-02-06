@@ -3,7 +3,7 @@ import PySimpleGUI as sg
 import logging
 import os # import the os module
 
-def custom_command_1():
+def custom_command():
     
     pass
 
@@ -18,13 +18,13 @@ def custom_command_3():
 def main():
     logging.basicConfig(filename='terminal.log', level=logging.DEBUG)
     commands = {
-        "pause": custom_command_1,
+        "exit": custom_command,
         "retry": custom_command_2,
         "help": custom_command_3
     }
 
     layout = [[sg.Multiline(size=(80, 20), key='-OUTPUT-', disabled=True, autoscroll=True)],
-              [sg.Input(key='-IN-'), sg.Button('Enter'),]]
+              [sg.Input(key='-IN-'), sg.Button('Enter'), sg.Exit]]
 
     window = sg.Window('Terminal', layout)
 
@@ -37,8 +37,11 @@ def main():
         window['-IN-'].update('')
         window['-OUTPUT-'].print(user_input)
 
-        if user_input == "exit":
-            os._exit(0) # exit the subprocess with a success code
+        if user_input == "":
+            logging.warning(f"field cannot be empty!")
+            user_input = "none"
+
+        
 
         command_parts = user_input.split()
         command = command_parts[0]
